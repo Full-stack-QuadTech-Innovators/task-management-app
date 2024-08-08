@@ -5,7 +5,7 @@ function ContinueButton() {
 	const { isDarkMode } = useContext(ThemeContext);
 	return (
 		<button
-			className={`w-full px-4 py-2 font-bold ${
+			className={`w-full px-4 py-2 font-regular${
 				isDarkMode
 					? "text-darkMode-foreground bg-darkMode-button hover:bg-darkMode-button-hover"
 					: "text-lightMode-foreground bg-lightMode-button hover:bg-lightMode-button-hover"
