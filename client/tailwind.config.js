@@ -12,6 +12,7 @@ module.exports = {
 					background: "#2A2A2A",
 					foreground: "#FFFFFF",
 					button: "#202020",
+					containerBlack: "#222222",
 					buttonHover: "#1A1A1A", // Add hover color
 				},
 			},
