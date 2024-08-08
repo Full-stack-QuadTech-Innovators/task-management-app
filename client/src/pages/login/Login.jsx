@@ -3,6 +3,7 @@ import Header from "../../components/common/header/Header";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import ContinueButton from "../../components/common/submit-button/ContinueButton";
 import Label from "../../components/common/label/Label";
+
 const Login = () => {
 	const { isDarkMode } = useContext(ThemeContext);
 
@@ -15,15 +16,12 @@ const Login = () => {
 			}
 		>
 			<Header />
-			<div
-				className={`flex items-center justify-center min-h-screen
-				}`}
-			>
+			<div className={`flex items-center justify-center min-h-screen`}>
 				<div className="w-full max-w-md p-8 space-y-6">
 					<h2 className="text-2xl text-center">Log In</h2>
 					<form>
 						<div className="mb-4">
-							<Label value={"email"} />
+							<Label value={"email"} className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 text-base border-b-2 border-black ${
 									isDarkMode
@@ -35,7 +33,7 @@ const Login = () => {
 							/>
 						</div>
 						<div className="mb-6">
-							<Label value={"password"} />
+							<Label value={"password"} className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 text-base border-b-2 border-black ${
 									isDarkMode
