@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useEffect, useContext } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Header from "../../components/common/header/Header";
 
 const About = () => {
 	const { isDarkMode } = useContext(ThemeContext);
-
+	useEffect(() => {
+		document.title = "Patel Notes | About";
+	}, []);
 	return (
 		<div
 			className={

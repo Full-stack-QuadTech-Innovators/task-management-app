@@ -1,9 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
 
 export default function HomePage() {
 	const { isDarkMode } = useContext(ThemeContext);
+	useEffect(() => {
+		document.title = "Patel Notes | Home";
+	}, []);
 	return (
 		<div
 			className={`w-full h-screen bg-${
