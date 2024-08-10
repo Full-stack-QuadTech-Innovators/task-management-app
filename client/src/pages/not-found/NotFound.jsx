@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Header from "../../components/common/header/Header";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
 	const { isDarkMode } = useContext(ThemeContext);
-
+	useEffect(() => {
+		document.title = "Patel Notes | 404";
+	}, []);
 	return (
 		<div
 			className={

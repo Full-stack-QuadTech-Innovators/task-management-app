@@ -8,7 +8,7 @@ import NotFound from "../pages/not-found/NotFound";
 function AppRoutes() {
 	return (
 		<Routes>
-			<Route path="*" element={<NotFound />} /> TBD
+			<Route path="*" element={<NotFound />} />
 			<Route path="/" element={<HomePage />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<SignUp />} />

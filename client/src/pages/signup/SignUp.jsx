@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Header from "../../components/common/header/Header";
 import Label from "../../components/common/label/Label";
@@ -6,7 +6,9 @@ import ContinueButton from "../../components/common/submit-button/ContinueButton
 
 const SignUp = () => {
 	const { isDarkMode } = useContext(ThemeContext);
-
+	useEffect(() => {
+		document.title = "Patel Notes | Sign Up";
+	}, []);
 	return (
 		<div
 			className={

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useEffect, useContext } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Header from "../../components/common/header/Header";
 import Label from "../../components/common/label/Label";
@@ -6,7 +6,9 @@ import ContinueButton from "../../components/common/submit-button/ContinueButton
 
 const Contact = () => {
 	const { isDarkMode } = useContext(ThemeContext);
-
+	useEffect(() => {
+		document.title = "Patel Notes | Contact";
+	}, []);
 	return (
 		<div
 			className={
