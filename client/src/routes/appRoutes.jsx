@@ -5,11 +5,14 @@ import HomePage from "../pages/homepage/HomePage";
 import About from "../pages/about/About";
 import Contact from "../pages/contact/Contact";
 import NotFound from "../pages/not-found/NotFound";
+import UserProtectedRoutes from "../util/protected-routes/UserProtectedRoutes";
 function AppRoutes() {
 	return (
 		<Routes>
 			<Route path="*" element={<NotFound />} />
-			<Route path="/" element={<HomePage />} />
+			<Route element={<UserProtectedRoutes />}>
+				<Route path="/" element={<HomePage />} />
+			</Route>
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<SignUp />} />
 			<Route path="/about" element={<About />} />
