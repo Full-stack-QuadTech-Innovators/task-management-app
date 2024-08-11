@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const path = require("path");
 require("dotenv").config();
+require("./db/db");
 
 // Initialize the Express app
 const app = express();
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors()); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(helmet()); // Security headers
 app.use(morgan("dev")); // Logging HTTP requests
-
+require("./db/db");
 // Define a simple route
 app.get("/", (req, res) => {
 	res.send("Welcome to the Express server!");
