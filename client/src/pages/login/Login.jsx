@@ -3,6 +3,7 @@ import Header from "../../components/common/header/Header";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import ContinueButton from "../../components/common/submit-button/ContinueButton";
 import Label from "../../components/common/label/Label";
+import { Button } from "../../components/common/ui/button";
 
 const Login = () => {
 	const { isDarkMode } = useContext(ThemeContext);
@@ -48,6 +49,7 @@ const Login = () => {
 						</div>
 						<div className="flex items-center justify-between">
 							<ContinueButton />
+							{/* <Button>Click me </Button> */}
 						</div>
 					</form>
 				</div>

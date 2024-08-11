@@ -1,4 +1,15 @@
 module.exports = {
+	// content: [
+	// 	"./index.html",
+	// 	"./src/**/*.{js,jsx,ts,tsx}",
+	// 	"./node_modules/@shadcn/ui/**/*.{js,ts,jsx,tsx}",
+	// ],
+	content: [
+		"./pages/**/*.{js,jsx}",
+		"./components/**/*.{js,jsx}",
+		"./app/**/*.{js,jsx}",
+		"./src/**/*.{js,jsx}",
+	],
 	theme: {
 		extend: {
 			colors: {
@@ -6,7 +17,7 @@ module.exports = {
 					background: "#F3F0E8",
 					foreground: "#000000",
 					button: "#EEE5D0",
-					buttonHover: "#DDD0B0", // Add hover color
+					buttonHover: "#DDD0B0",
 					topTask: "#DCFFD0",
 					normalTask: "#D0E8FF",
 					topDate: "#FFA5CD",
@@ -19,7 +30,7 @@ module.exports = {
 					foreground: "#FFFFFF",
 					button: "#202020",
 					containerBlack: "#222222",
-					buttonHover: "#1A1A1A", // Add hover color,
+					buttonHover: "#1A1A1A",
 					topTask: "#334D31",
 					normalTask: "#31464C",
 					topDate: "#4C314D",
@@ -30,8 +41,7 @@ module.exports = {
 			},
 		},
 	},
-	darkMode: "class", // Enable dark mode with class
+	darkMode: "class",
 	variants: {},
 	plugins: [],
-	content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
 };
