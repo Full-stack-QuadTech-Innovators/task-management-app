@@ -1,11 +1,12 @@
-import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import ToggleThemeButton from "../theme-button/ToggleThemeButton";
 import LogoComponent from "../ui/LogoComponent";
-
+import { Switch as ShadSwitch } from "../ui/switch";
+import { useContext } from "react";
+import ThemeContext from "../../../contexts/ThemeContext/ThemeContext";
 function Header() {
 	const location = useLocation();
-
+	const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 	// Determine if the current route is either the login or signup page
 	const isAuthPage =
 		location.pathname === "/login" || location.pathname === "/signup";
