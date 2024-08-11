@@ -10,7 +10,7 @@ export default function UserProtectedRoutes() {
 	// const currentUser = isLoggedIn
 	// 	? users.find((user) => user.uuid === loggedIn.uuid)
 	// 	: null;
-	const currentUser = null;
+	const currentUser = true;
 
 	return currentUser ? <Outlet /> : <Navigate to="/login/" />;
 }
