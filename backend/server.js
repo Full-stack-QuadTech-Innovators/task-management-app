@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const path = require("path");
+const userRouter = require("./routes/userRouter");
 require("dotenv").config();
 require("./db/db");
 
@@ -22,11 +23,7 @@ app.get("/", (req, res) => {
 	res.send("Welcome to the Express server!");
 });
 
-// Example API route
-// app.get('/api/data', (req, res) => {
-//   res.json({ message: 'This is some data from the API' });
-// });
-
+app.use("/api/users", userRouter);
 // Serve static files from a 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
 
