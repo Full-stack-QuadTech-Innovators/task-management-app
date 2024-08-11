@@ -12,6 +12,7 @@ function AppRoutes() {
 			<Route path="*" element={<NotFound />} />
 			<Route element={<UserProtectedRoutes />}>
 				<Route path="/" element={<HomePage />} />
+				<Route path="/home" element={<HomePage />} />
 			</Route>
 			<Route path="/login" element={<Login />} />
 			<Route path="/signup" element={<SignUp />} />

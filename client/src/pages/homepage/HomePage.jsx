@@ -134,6 +134,7 @@
 import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
+import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 
 export default function HomePage() {
 	const { isDarkMode } = useContext(ThemeContext);
@@ -155,6 +156,7 @@ export default function HomePage() {
 					<h1 className="text-2xl font-regular text-gray-900 dark:text-white">
 						Petal Notes
 					</h1>
+					<ThemeToggleButton />
 				</div>
 
 				{/* Task List */}
@@ -221,8 +223,8 @@ export default function HomePage() {
 							<span className="text-black dark:text-white bg-lightMode-normalDate dark:bg-darkMode-normalDate rounded-2xl w-64 h-11 ">
 								{date}
 							</span>
-							<div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-								<span className="text-lightMode-percentageTop dark:text-darkMode-percentageTop font-bold">
+							<div className="w-10  h-10 bg-white rounded-full flex items-center justify-center">
+								<span className="text-lightMode-percentageTop dark:text-darkMode-percentageTop font-bold text-sm p-2">
 									{100 - index * 5}%
 								</span>
 							</div>
@@ -232,14 +234,14 @@ export default function HomePage() {
 
 				{/* Header */}
 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
-					<div className="text-white text-xl bg-lightmo">
+					<div className="text-black dark:text-white text-xl">
 						Hello, Michael
 					</div>
 					<div className="w-12 h-12 bg-white rounded-full"></div>
 				</div>
 
 				{/* Date */}
-				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-red-500 rounded-2xl flex items-center justify-center text-white text-xl">
+				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-lightMode-buttonHover dark:bg-darkMode-buttonHover rounded-2xl flex items-center justify-center text-black dark:text-white text-xl">
 					25 Jul 2024
 				</div>
 
@@ -249,27 +251,32 @@ export default function HomePage() {
 						Current Task
 					</h2>
 					<div className="grid grid-cols-2 gap-4">
-						<div className="bg-purple-600 p-4 rounded-xl text-white">
-							<h3 className="font-semibold mb-2">Current Task</h3>
-							<p>Take my pumpkin for a walk</p>
+						<div className="bg-lightMode-topTask dark:bg-darkMode-topTask p-4 rounded-xl text-white">
+							<h3 className="font-semibold text-black dark:text-white mb-2">
+								Current Task
+							</h3>
+							<p className="text-black dark:text-white">
+								Take my pumpkin for a walk
+							</p>
 						</div>
-						<div className="bg-purple-600 p-4 rounded-xl text-white">
-							<h3 className="font-semibold mb-2">Next Task</h3>
-							<p>Water the petunias</p>
+						<div className="bg-lightMode-normalTask dark:bg-darkMode-normalTask p-4 rounded-xl text-white">
+							<h3 className="font-semibold mb-2 text-black dark:text-white">
+								Next Task
+							</h3>
+							<p className="text-black dark:text-white">
+								Water the petunias
+							</p>
 						</div>
 					</div>
 				</div>
 
 				{/* AI Suggestions */}
 				<div className="col-start-2 col-end-5 row-start-4 row-end-6 bg-lightMode-topTask dark:bg-darkMode-topTask rounded-2xl p-4 overflow-y-auto">
-					<h2 className="text-2xl font-semibold text-white mb-4">
-						AI Suggestions
-					</h2>
-					<div className="text-white">
-						<p className="mb-2">
+					<div className="text-black dark:text-white text-center ">
+						<h3 className="mb-2 font-bold">
 							Here's a short and concise list of steps to take
 							your pumpkin for a walk:
-						</p>
+						</h3>
 						<ol className="list-decimal list-inside space-y-2">
 							<li>
 								Choose a small to medium-sized pumpkin that is
@@ -311,12 +318,12 @@ export default function HomePage() {
 				</div>
 
 				{/* Ask AI */}
-				<div className="col-start-2 col-end-5 row-start-6 row-end-7 bg-pink-400 rounded-2xl p-4 flex items-center">
+				<div className="col-start-2 col-end-5 row-start-6 row-end-7  rounded-2xl p-4 flex items-center">
 					<input
-						className="flex-grow p-3 rounded-xl bg-white text-gray-900 placeholder-gray-500"
+						className="flex-grow p-3 rounded-xl bg-lightMode-button dark:bg-darkMode-topTask text-gray-900 w-2/4  placeholder-gray-500"
 						placeholder="Ask me anything..."
 					/>
-					<button className="ml-4 bg-pink-600 text-white px-4 py-2 rounded-xl">
+					<button className="ml-4 bg-lightMode-buttonHover dark:bg-darkMode-topTask text-white px-4 py-2 rounded-xl">
 						Send
 					</button>
 				</div>
