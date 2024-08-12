@@ -13,59 +13,29 @@ const UserController = {
 	},
 
 	createUser: async (req, res) => {
-		const { username, email, password } = req.body;
-
-		if (!username || !email || !password) {
-			return res.status(400).json({ err: "All fields are required" });
-		}
-
 		try {
-			// Check if user already exists
-			const existingUser = await User.findOne({
-				$or: [{ username }, { email }],
-			});
-			if (existingUser) {
-				return res
-					.status(400)
-					.json({
-						err: "User with this username or email already exists",
-					});
-			}
-
-			let hashedPassword = await hashP(password);
-
-			const newUser = new User({
+			const { username, email, password } = req.body;
+			const hashedPassword = await hashP(password);
+			const user = new User({
 				username,
 				email,
 				password: hashedPassword,
 			});
-
-			await newUser.save();
-
-			res.status(201).json(newUser);
+			await user.save();
+			res.status(201).json({
+				message: "User created successfully",
+				userId: user._id,
+			});
 		} catch (err) {
-			console.error("There is an error:", err);
-			res.status(500).json({ err: err.message });
+			if (err.code === 11000) {
+				res.status(400).json({
+					message: "Username or email already exists",
+				});
+			} else {
+				res.status(400).json({ message: err.message });
+			}
 		}
 	},
-
-	// updatePassword: async (req, res) => {
-	// 	try {
-	// 		let passwd = await hashP(req.body.password);
-
-	// 		const updatedUser = await User.findByIdAndUpdate(
-	// 			req.params.id,
-	// 			{ password: passwd },
-	// 			{
-	// 				new: true,
-	// 			}
-	// 		);
-	// 		res.status(200).json(updatedUser);
-	// 	} catch (err) {
-	// 		console.error("There is an error:", err);
-	// 		res.status(500).json({ err: err.message });
-	// 	}
-	// },
 
 	updateUser: async (req, res) => {
 		try {

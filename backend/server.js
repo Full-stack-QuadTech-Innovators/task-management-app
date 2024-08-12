@@ -11,6 +11,13 @@ require("./db/db");
 // Initialize the Express app
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+	origin: process.env.FRONTEND_URL || "http://localhost:5174", // Allow your frontend URL
+	optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 // Middleware setup
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
