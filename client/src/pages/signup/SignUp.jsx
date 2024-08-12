@@ -1,16 +1,19 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Header from "../../components/common/header/Header";
 import Label from "../../components/common/label/Label";
 import ContinueButton from "../../components/common/submit-button/ContinueButton";
 import axios from "axios";
+import { validateSignUpForm } from "../../util/signup.auth";
+import UserContext from "../../contexts/UserContext/UserContext";
 // Make sure to install axios: npm install axioconst
 const api = axios.create({
 	baseURL: "http://localhost:3009", // Replace with your backend URL
 });
 
 const SignUp = () => {
+	const { userList, getUsers } = useContext(UserContext);
 	const navigate = useNavigate();
 	const { isDarkMode } = useContext(ThemeContext);
 	const [formData, setFormData] = useState({
@@ -23,14 +26,38 @@ const SignUp = () => {
 
 	useEffect(() => {
 		document.title = "Patel Notes | Sign Up";
-	}, []);
+
+		console.log(userList);
+	}, [userList]);
 
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
+	// const handleSubmit = async (e) => {
+	// 	e.preventDefault();
+	// 	if (validateSignUpForm(formData, setError, userList))
+	// 		if (formData.password !== formData.confirmPassword) {
+	// 			setError("Passwords don't match");
+	// 			return;
+	// 		}
+	// 	try {
+	// 		const response = await api.post("/api/users", {
+	// 			username: formData.username,
+	// 			email: formData.email,
+	// 			password: formData.password,
+	// 		});
+	// 		console.log("User created:", response.data);
+	// 		navigate("/login");
+	// 	} catch (err) {
+	// 		setError(err.response?.data?.message || "An error occurred");
+	// 	}
+	// };
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (!validateSignUpForm(formData, setError, userList)) {
+			return; // Stop if validation fails
+		}
 		if (formData.password !== formData.confirmPassword) {
 			setError("Passwords don't match");
 			return;
@@ -60,7 +87,8 @@ const SignUp = () => {
 			<div className={`flex items-center justify-center min-h-screen`}>
 				<div className="w-full max-w-md p-8 space-y-6">
 					<h2 className="text-2xl text-center">Sign Up</h2>
-					{error && <p className="text-red-500">{error}</p>}
+
+					{error && <p className="text-red-500">{String(error)}</p>}
 					<form className="space-y-6" onSubmit={handleSubmit}>
 						<div>
 							<Label value="Username" className="mb-2" />
