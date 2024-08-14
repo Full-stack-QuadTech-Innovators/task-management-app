@@ -1,6 +1,9 @@
 const User = require("../models/User");
-const { hashP } = require("../services/encrypt");
-
+const { hashP, compareP } = require("../services/encrypt");
+const {
+	generateAccessToken,
+	generateRefreshToken,
+} = require("../services/jwtHelpers");
 const UserController = {
 	getUsers: async (req, res) => {
 		try {
@@ -9,6 +12,44 @@ const UserController = {
 		} catch (err) {
 			console.error("There is an error:", err);
 			res.status(500).json({ err: "Internal error" });
+		}
+	},
+	loginUser: async (req, res) => {
+		try {
+			const { email, password } = req.body;
+			const user = await User.findOne({ email });
+			if (!user) {
+				return res
+					.status(401)
+					.json({ message: "Invalid email or password" });
+			}
+			const isMatch = await compareP(password, user.password);
+			if (!isMatch) {
+				return res
+					.status(401)
+					.json({ message: "Invalid Email Or Passowrd" });
+			}
+			//JWT
+			let accessToken = generateAccessToken(user);
+			let refreshToken = generateRefreshToken(user);
+			await User.findByIdAndUpdate(
+				user._id,
+				{ refreshToken },
+				{ new: true }
+			);
+			res.cookie("refreshToken", refreshToken, {
+				httpOnly: true,
+				maxAge: 24 * 60 * 60 * 1000, // 1 day
+			});
+
+			res.status(200).json({
+				auth: true,
+				accessToken,
+				message: "Login successful",
+			});
+		} catch (error) {
+			console.error(error);
+			throw error;
 		}
 	},
 
