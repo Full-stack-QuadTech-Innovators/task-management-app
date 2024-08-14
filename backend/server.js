@@ -13,24 +13,35 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-	origin: process.env.FRONTEND_URL || "http://localhost:5174", // Allow your frontend URL
+	origin: process.env.FRONTEND_URL || "http://localhost:5173", // Allow your frontend URL
 	optionsSuccessStatus: 200,
+	credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 // Middleware setup
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(cors()); // Enable CORS (Cross-Origin Resource Sharing)
 app.use(helmet()); // Security headers
 app.use(morgan("dev")); // Logging HTTP requests
-require("./db/db");
+
 // Define a simple route
 app.get("/", (req, res) => {
 	res.send("Welcome to the Express server!");
 });
 
+// Use userRouter for /api/users routes
 app.use("/api/users", userRouter);
+
+try {
+	console.log("Setting up /api/users routes");
+	app.use("/api/users", userRouter);
+	console.log("/api/users routes set up successfully");
+} catch (error) {
+	console.error("Error setting up /api/users routes:", error);
+}
+
 // Serve static files from a 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -42,7 +53,10 @@ app.use((req, res, next) => {
 // Global error handler
 app.use((err, req, res, next) => {
 	console.error(err.stack);
-	res.status(500).send("Something broke!");
+	res.status(err.status || 500).json({
+		message: err.message || "Something went wrong!",
+		error: process.env.NODE_ENV === "production" ? {} : err,
+	});
 });
 
 // Define the port the server will listen on

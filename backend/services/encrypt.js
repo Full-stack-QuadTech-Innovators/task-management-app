@@ -7,22 +7,25 @@ module.exports = {
 	hashP: async function (str) {
 		try {
 			let hash = await bcrypt.hash(str, module.exports.saltRounds);
-			console.log(`hashed password ${str}: ${hash}`);
+			console.log(`Password hashed successfully.`); // Removed sensitive data from logs
 			return hash;
 		} catch (err) {
-			console.log(err.message);
-			return err.message;
+			console.error(`Error hashing password: ${err.message}`);
+			throw err;
 		}
 	},
 
 	compareP: async function (plainPassword, hashedPassword) {
 		try {
 			const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-			isMatch
-				? console.log("Passwords match.")
-				: console.log("Passwords don't match.");
+			if (isMatch) {
+				console.log("Passwords match.");
+			} else {
+				console.log("Passwords don't match.");
+			}
+			return isMatch; // Return the result of the comparison
 		} catch (error) {
-			console.error(error);
+			console.error(`Error comparing passwords: ${error.message}`);
 			throw error;
 		}
 	},
