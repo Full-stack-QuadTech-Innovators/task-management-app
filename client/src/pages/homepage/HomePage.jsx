@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
 import UserContext from "../../contexts/UserContext/UserContext";
@@ -9,10 +9,20 @@ export default function HomePage() {
 	const navigate = useNavigate();
 	const { isDarkMode } = useContext(ThemeContext);
 	const { currentUser, logout } = useContext(UserContext);
+	const [currentDate, setCurrentDate] = useState("");
 
 	useEffect(() => {
 		document.title = "Patel Notes | Home";
+		updateDate();
+		const interval = setInterval(updateDate, 60000);
+		return () => clearInterval(interval);
 	}, []);
+
+	const updateDate = () => {
+		const now = new Date();
+		const options = { day: "2-digit", month: "short", year: "numeric" };
+		setCurrentDate(now.toLocaleDateString("en-US", options));
+	};
 
 	const handleLogout = async () => {
 		await logout();
@@ -26,12 +36,14 @@ export default function HomePage() {
 			}`}
 		>
 			<div className="grid grid-cols-4 grid-rows-6 h-screen gap-4 p-4">
-				{/* Logo and Title */}
-				<div className="col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-center p-4 text-center">
-					<img src={Logo} alt="Logo" className="h-8 mr-2" />
-					<h1 className="text-2xl font-regular text-gray-900 dark:text-white">
-						Petal Notes
-					</h1>
+				{/* Logo, Title, and Theme Toggle */}
+				<div className="col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-between p-4">
+					<div className="flex items-center">
+						<img src={Logo} alt="Logo" className="h-8 mr-2" />
+						<h1 className="text-2xl font-regular text-gray-900 dark:text-white">
+							Petal Notes
+						</h1>
+					</div>
 					<ThemeToggleButton />
 				</div>
 
@@ -106,7 +118,7 @@ export default function HomePage() {
 				</div>
 				{/* Date */}
 				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-lightMode-buttonHover dark:bg-darkMode-buttonHover rounded-2xl flex items-center justify-center text-black dark:text-white text-xl">
-					25 Jul 2024
+					{currentDate}
 				</div>
 
 				{/* Current Tasks */}
