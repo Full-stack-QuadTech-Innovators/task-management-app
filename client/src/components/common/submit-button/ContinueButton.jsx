@@ -7,6 +7,7 @@ function ContinueButton({
 	text = "Continue",
 	type = "button",
 	disabled = false,
+	loading = false,
 }) {
 	const { isDarkMode } = useContext(ThemeContext);
 
@@ -17,13 +18,13 @@ function ContinueButton({
 					? "text-darkMode-foreground bg-darkMode-button hover:bg-darkMode-button-hover"
 					: "text-lightMode-foreground bg-lightMode-button hover:bg-lightMode-button-hover"
 			} rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-				disabled ? "opacity-50 cursor-not-allowed" : ""
+				disabled || loading ? "opacity-50 cursor-not-allowed" : ""
 			}`}
 			type={type}
 			onClick={onClick}
-			disabled={disabled}
+			disabled={disabled || loading}
 		>
-			{text}
+			{loading ? "Loading..." : text}
 		</button>
 	);
 }

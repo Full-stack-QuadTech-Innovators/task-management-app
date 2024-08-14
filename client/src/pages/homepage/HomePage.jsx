@@ -1,147 +1,23 @@
-// import { useContext, useEffect } from "react";
-// import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
-// import Logo from "../../assets/logo.svg";
-
-// export default function HomePage() {
-// 	const { isDarkMode } = useContext(ThemeContext);
-
-// 	useEffect(() => {
-// 		document.title = "Patel Notes | Home";
-// 	}, []);
-
-// 	return (
-// 		<div
-// 			className={`w-full min-h-screen bg-${
-// 				isDarkMode ? "darkMode-background" : "lightMode-background"
-// 			}`}
-// 		>
-// 			<div className="grid grid-cols-4 grid-rows-6 h-full gap-4 p-4">
-// 				{/* Logo and Title */}
-// 				<div className="col-start-1 col-end-2 row-start-1 row-end-2 flex items-center justify-center p-4 text-center">
-// 					<img src={Logo} alt="Logo" className="h-8 mr-2" />
-// 					<h1 className="text-2xl font-regular text-gray-900 dark:text-white">
-// 						Petal Notes
-// 					</h1>
-// 				</div>
-
-// 				{/* Task List */}
-// 				<div className="col-start-1 col-end-2 row-start-2 row-end-5 flex items-center justify-center">
-// 					<div className="flex flex-col items-center justify-center gap-4 p-5 w-5/6 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl h-5/6">
-// 						{[
-// 							"Take my pumpkin for a walk",
-// 							"Water the petunias",
-// 							"Get a haircut",
-// 							"Play the guitar",
-// 						].map((task, index) => (
-// 							<div
-// 								key={index}
-// 								className="w-full p-4 bg-slate-50 dark:bg-gray-700 rounded-2xl text-gray-900 dark:text-white"
-// 							>
-// 								{task}
-// 							</div>
-// 						))}
-// 						<input
-// 							className="w-full p-4 rounded-2xl bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-500"
-// 							placeholder="Add a task"
-// 						/>
-// 					</div>
-// 				</div>
-
-// 				{/* Task Status */}
-// 				<div className="col-start-1 col-end-2 row-start-5 row-end-7 bg-orange-500 rounded-2xl p-4">
-// 					<h2 className="text-xl font-semibold text-white mb-4">
-// 						Task Status
-// 					</h2>
-// 					{[
-// 						"25/07/2024",
-// 						"24/07/2024",
-// 						"23/07/2024",
-// 						"22/07/2024",
-// 						"21/07/2024",
-// 					].map((date, index) => (
-// 						<div
-// 							key={index}
-// 							className="flex justify-between items-center mb-2"
-// 						>
-// 							<span className="text-white">{date}</span>
-// 							<div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-// 								<span className="text-orange-500 font-bold">
-// 									{100 - index * 5}%
-// 								</span>
-// 							</div>
-// 						</div>
-// 					))}
-// 				</div>
-
-// 				{/* Header */}
-// 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-green-500 p-4 flex justify-between items-center rounded-2xl">
-// 					<div className="text-white text-xl">Hello, Michael</div>
-// 					<div className="w-12 h-12 bg-white rounded-full"></div>
-// 				</div>
-
-// 				{/* Date */}
-// 				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-red-500 rounded-2xl flex items-center justify-center text-white text-xl">
-// 					25 Jul 2024
-// 				</div>
-
-// 				{/* Current Tasks */}
-// 				<div className="col-start-2 col-end-5 row-start-2 row-end-4 bg-purple-400 rounded-2xl p-4">
-// 					<h2 className="text-2xl font-semibold text-white mb-4">
-// 						Current Tasks
-// 					</h2>
-// 					<div className="grid grid-cols-2 gap-4">
-// 						<div className="bg-purple-600 p-4 rounded-xl text-white">
-// 							<h3 className="font-semibold mb-2">Current Task</h3>
-// 							<p>Take my pumpkin for a walk</p>
-// 						</div>
-// 						<div className="bg-purple-600 p-4 rounded-xl text-white">
-// 							<h3 className="font-semibold mb-2">Next Task</h3>
-// 							<p>Water the petunias</p>
-// 						</div>
-// 					</div>
-// 				</div>
-
-// 				{/* AI Suggestions */}
-// 				<div className="col-start-2 col-end-5 row-start-4 row-end-6 bg-cyan-400 rounded-2xl p-4">
-// 					<h2 className="text-2xl font-semibold text-white mb-4">
-// 						AI Suggestions
-// 					</h2>
-// 					<p className="text-white">
-// 						Here's a short and concise list of steps to take your
-// 						pumpkin for a walk: 1. Choose a small to medium-sized
-// 						pumpkin. 2. Create a simple leash using string or rope.
-// 						3. Pick a safe route for your walk. 4. Carry the pumpkin
-// 						gently. 5. Take photos to document your unique walk. 6.
-// 						Return home and store the pumpkin in a cool, dry place.
-// 					</p>
-// 				</div>
-
-// 				{/* Ask AI */}
-// 				<div className="col-start-2 col-end-5 row-start-6 row-end-7 bg-pink-400 rounded-2xl p-4 flex items-center">
-// 					<input
-// 						className="flex-grow p-3 rounded-xl bg-white text-gray-900 placeholder-gray-500"
-// 						placeholder="Ask me anything..."
-// 					/>
-// 					<button className="ml-4 bg-pink-600 text-white px-4 py-2 rounded-xl">
-// 						Send
-// 					</button>
-// 				</div>
-// 			</div>
-// 		</div>
-// 	);
-// }
-
 import { useContext, useEffect } from "react";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
+import UserContext from "../../contexts/UserContext/UserContext";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
+	const navigate = useNavigate();
 	const { isDarkMode } = useContext(ThemeContext);
+	const { currentUser, logout } = useContext(UserContext);
 
 	useEffect(() => {
 		document.title = "Patel Notes | Home";
 	}, []);
+
+	const handleLogout = async () => {
+		await logout();
+		navigate("/login");
+	};
 
 	return (
 		<div
@@ -159,28 +35,6 @@ export default function HomePage() {
 					<ThemeToggleButton />
 				</div>
 
-				{/* Task List */}
-				{/* <div className="col-start-1 col-end-2 row-start-2 row-end-5 flex items-center justify-center">
-					<div className="flex flex-col items-center justify-center gap-4 p-5 w-5/6 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl h-5/6">
-						{[
-							"Take my pumpkin for a walk",
-							"Water the petunias",
-							"Get a haircut",
-							"Play the guitar",
-						].map((task, index) => (
-							<div
-								key={index}
-								className="w-full p-4 bg-slate-50 dark:bg-gray-700 rounded-2xl text-gray-900 dark:text-white"
-							>
-								{task}
-							</div>
-						))}
-						<input
-							className="w-full p-4 rounded-2xl bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-500"
-							placeholder="Add a task"
-						/>
-					</div>
-				</div> */}
 				<div className="col-start-1 col-end-2 row-start-2 row-end-5 flex items-center justify-center">
 					<div className="flex flex-col items-center justify-center gap-4 p-5 w-5/6 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl h-5/6">
 						{[
@@ -232,14 +86,24 @@ export default function HomePage() {
 					))}
 				</div>
 
-				{/* Header */}
+				{/* Header with Logout Button */}
 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
 					<div className="text-black dark:text-white text-xl">
-						Hello, Michael
+						Hello,{" "}
+						{currentUser
+							? currentUser.username || currentUser.email
+							: "Guest"}
 					</div>
-					<div className="w-12 h-12 bg-white rounded-full"></div>
+					<div className="flex items-center">
+						<button
+							onClick={handleLogout}
+							className="mr-4 bg-lightMode-buttonHover dark:bg-darkMode-buttonHover text-black dark:text-white px-4 py-2 rounded-xl hover:bg-opacity-80 transition-colors duration-200"
+						>
+							Logout
+						</button>
+						<div className="w-12 h-12 bg-white rounded-full"></div>
+					</div>
 				</div>
-
 				{/* Date */}
 				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-lightMode-buttonHover dark:bg-darkMode-buttonHover rounded-2xl flex items-center justify-center text-black dark:text-white text-xl">
 					25 Jul 2024
