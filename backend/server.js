@@ -1,11 +1,12 @@
 // Import necessary modules
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const path = require("path");
 const userRouter = require("./routes/userRouter");
-require("dotenv").config();
+
 require("./db/db");
 
 // Initialize the Express app
@@ -33,14 +34,6 @@ app.get("/", (req, res) => {
 
 // Use userRouter for /api/users routes
 app.use("/api/users", userRouter);
-
-try {
-	console.log("Setting up /api/users routes");
-	app.use("/api/users", userRouter);
-	console.log("/api/users routes set up successfully");
-} catch (error) {
-	console.error("Error setting up /api/users routes:", error);
-}
 
 // Serve static files from a 'public' directory
 app.use(express.static(path.join(__dirname, "public")));
