@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const path = require("path");
 const userRouter = require("./routes/userRouter");
+const taskRouter = require("./routes/taskRouter");
+console.log("Loaded taskRouter:", taskRouter);
 
 require("./db/db");
 
@@ -33,7 +35,10 @@ app.get("/", (req, res) => {
 });
 
 // Use userRouter for /api/users routes
+console.log("Setting up /api/users route");
 app.use("/api/users", userRouter);
+console.log("Setting up /api/tasks route");
+app.use("/api/tasks", taskRouter);
 
 // Serve static files from a 'public' directory
 app.use(express.static(path.join(__dirname, "public")));

@@ -4,7 +4,9 @@ require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 console.log("MONGODB_URI from .env:", process.env.MONGODB_URI);
 
 const mongoose = require("mongoose");
-
+const uri =
+	process.env.MONGODB_URI ||
+	"mongodb+srv://benstr1702:U88nrsngUFtGPbBu@patel-cluster.lwqqu.mongodb.net/";
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 (async () => {

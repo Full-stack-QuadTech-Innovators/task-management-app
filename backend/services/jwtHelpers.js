@@ -1,3 +1,7 @@
+/**
+ * TBD:
+ * 	implement refresh token
+ */
 const jwt = require("jsonwebtoken");
 
 const jwtHelpers = {

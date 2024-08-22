@@ -1,15 +1,20 @@
 import { useContext, useState, useEffect } from "react";
+import CurrentTasks from "../../components/task-list/CurrentTasks";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
 import UserContext from "../../contexts/UserContext/UserContext";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 import { useNavigate } from "react-router-dom";
+import TaskList from "../../components/task-list/TaskList";
 
 export default function HomePage() {
 	const navigate = useNavigate();
 	const { isDarkMode } = useContext(ThemeContext);
 	const { currentUser, logout } = useContext(UserContext);
+	const [currentTask, setCurrentTask] = useState(null);
 	const [currentDate, setCurrentDate] = useState("");
+	const [currentHour, setCurrentHour] = useState("");
+	const [nextTask, setNextTask] = useState(null);
 
 	useEffect(() => {
 		document.title = "Patel Notes | Home";
@@ -22,6 +27,7 @@ export default function HomePage() {
 		const now = new Date();
 		const options = { day: "2-digit", month: "short", year: "numeric" };
 		setCurrentDate(now.toLocaleDateString("en-US", options));
+		setCurrentHour(now.getHours());
 	};
 
 	const handleLogout = async () => {
@@ -29,6 +35,22 @@ export default function HomePage() {
 		navigate("/login");
 	};
 
+	const handleTasksUpdate = (current, next) => {
+		setCurrentTask(current);
+		setNextTask(next);
+	};
+
+	const checkTime = (hour) => {
+		if (hour >= 0 && hour < 12) {
+			return "Morning";
+		} else if (hour >= 12 && hour < 18) {
+			return "Afternoon";
+		} else if (hour >= 18 && hour < 21) {
+			return "Evening";
+		} else {
+			return "Night";
+		}
+	};
 	return (
 		<div
 			className={`w-full min-h-screen bg-${
@@ -47,31 +69,7 @@ export default function HomePage() {
 					<ThemeToggleButton />
 				</div>
 
-				<div className="col-start-1 col-end-2 row-start-2 row-end-5 flex items-center justify-center">
-					<div className="flex flex-col items-center justify-center gap-4 p-5 w-5/6 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl h-5/6">
-						{[
-							"Take my pumpkin for a walk",
-							"Water the petunias",
-							"Get a haircut",
-							"Play the guitar",
-						].map((task, index) => (
-							<div
-								key={index}
-								className={`w-full p-4 rounded-2xl text-center ${
-									index === 0
-										? "bg-lightMode-topTask dark:bg-darkMode-topTask text-black dark:text-white h-16" // First task
-										: "bg-lightMode-normalTask  dark:bg-darkMode-normalTask text-black dark:text-white h-12"
-								}`}
-							>
-								{task}
-							</div>
-						))}
-						<input
-							className="w-full p-4 bg-transparent border-b-2 border-black dark:border-white text-gray-900 dark:text-white placeholder-gray-500 text-center focus:outline-none"
-							placeholder="Add a task"
-						/>
-					</div>
-				</div>
+				<TaskList onTasksUpdate={handleTasksUpdate} />
 
 				{/* Task Status */}
 				<div className="col-start-1 col-end-2 row-start-5 row-end-7 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl p-4 overflow-y-auto">
@@ -80,7 +78,7 @@ export default function HomePage() {
 						"24/07/2024",
 						"23/07/2024",
 						"22/07/2024",
-						"21/07/2024",
+						,
 					].map((date, index) => (
 						<div
 							key={index}
@@ -101,7 +99,8 @@ export default function HomePage() {
 				{/* Header with Logout Button */}
 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
 					<div className="text-black dark:text-white text-xl">
-						Hello,{" "}
+						{"  Good "}
+						{checkTime(currentHour)},{" "}
 						{currentUser
 							? currentUser.username || currentUser.email
 							: "Guest"}
@@ -122,30 +121,7 @@ export default function HomePage() {
 				</div>
 
 				{/* Current Tasks */}
-				<div className="col-start-2 col-end-5 row-start-2 row-end-4  rounded-2xl p-4">
-					<h2 className="text-2xl font-semibold text-white mb-4">
-						Current Task
-					</h2>
-					<div className="grid grid-cols-2 gap-4">
-						<div className="bg-lightMode-topTask dark:bg-darkMode-topTask p-4 rounded-xl text-white">
-							<h3 className="font-semibold text-black dark:text-white mb-2">
-								Current Task
-							</h3>
-							<p className="text-black dark:text-white">
-								Take my pumpkin for a walk
-							</p>
-						</div>
-						<div className="bg-lightMode-normalTask dark:bg-darkMode-normalTask p-4 rounded-xl text-white">
-							<h3 className="font-semibold mb-2 text-black dark:text-white">
-								Next Task
-							</h3>
-							<p className="text-black dark:text-white">
-								Water the petunias
-							</p>
-						</div>
-					</div>
-				</div>
-
+				<CurrentTasks currentTask={currentTask} nextTask={nextTask} />
 				{/* AI Suggestions */}
 				<div className="col-start-2 col-end-5 row-start-4 row-end-6 bg-lightMode-topTask dark:bg-darkMode-topTask rounded-2xl p-4 overflow-y-auto">
 					<div className="text-black dark:text-white text-center ">
