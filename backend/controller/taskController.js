@@ -82,6 +82,59 @@ const taskController = {
 			});
 		}
 	},
+	editTask: async (req, res) => {
+		console.log("starting to edit task");
+		console.log("Request body:", req.body);
+		console.log("User from request:", req.user);
+		try {
+			const taskId = req.params.id;
+			const userId = req.user.id;
+			const { content } = req.body;
+
+			if (!content) {
+				return res
+					.status(400)
+					.json({ message: "Task content is required" });
+			}
+
+			if (!req.user || !req.user.id) {
+				return res
+					.status(401)
+					.json({ message: "User not authenticated" });
+			}
+
+			const task = await Tasks.findOne({ _id: taskId, user: userId });
+			if (!task) {
+				return res.status(404).json({
+					message:
+						"Task not found or you're not authorized to edit this task",
+				});
+			}
+
+			const updatedTask = await Tasks.findByIdAndUpdate(
+				taskId,
+				{ content: content },
+				{ new: true, runValidators: true }
+			);
+
+			console.log("Task updated:", updatedTask);
+			res.json(updatedTask);
+		} catch (error) {
+			console.error("Error editing task:", error);
+			if (error.name === "ValidationError") {
+				return res.status(400).json({
+					message: "Validation error",
+					errors: Object.values(error.errors).map(
+						(err) => err.message
+					),
+				});
+			}
+			res.status(500).json({
+				message: "Error editing task",
+				error: error.toString(),
+			});
+		}
+	},
 };
 
 module.exports = taskController;

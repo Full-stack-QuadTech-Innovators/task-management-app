@@ -7,7 +7,7 @@ import Label from "../../components/common/label/Label";
 import ContinueButton from "../../components/common/submit-button/ContinueButton";
 import axios from "axios";
 import { validateSignUpForm } from "../../util/signup.auth";
-
+import { Link } from "react-router-dom";
 const api = axios.create({
 	baseURL: "http://localhost:3009", // Replace with your backend URL
 });
@@ -169,12 +169,16 @@ const SignUp = () => {
 					<div className="text-center mt-4">
 						<p>
 							Already have an account?{" "}
-							<a
-								href="/login"
-								className="text-blue-500 hover:text-blue-700 underline"
+							<Link
+								to="/login"
+								className={`font-medium ${
+									isDarkMode
+										? "text-blue-400"
+										: "text-blue-600"
+								} hover:underline`}
 							>
 								Log in
-							</a>
+							</Link>
 						</p>
 					</div>
 				</div>

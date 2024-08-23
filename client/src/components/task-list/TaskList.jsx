@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Trash2, Edit2 } from "lucide-react";
 
 const api = axios.create({
 	baseURL: "http://localhost:3009",
@@ -10,6 +11,7 @@ const TaskList = ({ onTasksUpdate }) => {
 	const [newTask, setNewTask] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [editingTask, setEditingTask] = useState(null);
 
 	useEffect(() => {
 		fetchTasks();
@@ -46,7 +48,6 @@ const TaskList = ({ onTasksUpdate }) => {
 	const handleAddTask = async (e) => {
 		e.preventDefault();
 		if (!newTask.trim()) return;
-
 		try {
 			const response = await api.post(
 				"/api/tasks",
@@ -83,6 +84,31 @@ const TaskList = ({ onTasksUpdate }) => {
 		}
 	};
 
+	const handleEditTask = async (taskId, newContent) => {
+		try {
+			const response = await api.put(
+				`/api/tasks/${taskId}`,
+				{ content: newContent },
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							"accessToken"
+						)}`,
+					},
+				}
+			);
+			setTasks(
+				tasks.map((task) =>
+					task._id === taskId ? response.data : task
+				)
+			);
+			setEditingTask(null);
+		} catch (err) {
+			setError("Failed to edit task");
+			console.error("Error editing task:", err);
+		}
+	};
+
 	if (isLoading) return <div>Loading tasks...</div>;
 	if (error) return <div>Error: {error}</div>;
 
@@ -99,13 +125,52 @@ const TaskList = ({ onTasksUpdate }) => {
 									: "bg-lightMode-normalTask dark:bg-darkMode-normalTask text-black dark:text-white"
 							}`}
 						>
-							<span>{task.content}</span>
-							<button
-								onClick={() => handleDeleteTask(task._id)}
-								className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-							>
-								🗑️
-							</button>
+							{editingTask === task._id ? (
+								<input
+									type="text"
+									value={task.content}
+									onChange={(e) => {
+										const updatedTasks = tasks.map((t) =>
+											t._id === task._id
+												? {
+														...t,
+														content: e.target.value,
+												  }
+												: t
+										);
+										setTasks(updatedTasks);
+									}}
+									onBlur={() =>
+										handleEditTask(task._id, task.content)
+									}
+									onKeyPress={(e) => {
+										if (e.key === "Enter") {
+											handleEditTask(
+												task._id,
+												task.content
+											);
+										}
+									}}
+									className="bg-transparent w-full text-center focus:outline-none"
+									autoFocus
+								/>
+							) : (
+								<span>{task.content}</span>
+							)}
+							<div className="flex items-center">
+								<button
+									onClick={() => setEditingTask(task._id)}
+									className="ml-2 px-2 py-1 text-blue-500 rounded hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+								>
+									<Edit2 size={20} />
+								</button>
+								<button
+									onClick={() => handleDeleteTask(task._id)}
+									className="ml-2 px-2 py-1 text-red-500 rounded hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+								>
+									<Trash2 size={20} />
+								</button>
+							</div>
 						</div>
 					))}
 				</div>

@@ -3,6 +3,7 @@ import CurrentTasks from "../../components/task-list/CurrentTasks";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
 import UserContext from "../../contexts/UserContext/UserContext";
+import TaskStatus from "../../components/task-list/TaskStatus";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 import { useNavigate } from "react-router-dom";
 import TaskList from "../../components/task-list/TaskList";
@@ -41,7 +42,7 @@ export default function HomePage() {
 	};
 
 	const checkTime = (hour) => {
-		if (hour >= 0 && hour < 12) {
+		if (hour >= 6 && hour < 12) {
 			return "Morning";
 		} else if (hour >= 12 && hour < 18) {
 			return "Afternoon";
@@ -72,30 +73,7 @@ export default function HomePage() {
 				<TaskList onTasksUpdate={handleTasksUpdate} />
 
 				{/* Task Status */}
-				<div className="col-start-1 col-end-2 row-start-5 row-end-7 bg-lightMode-background dark:bg-darkMode-containerBlack rounded-2xl p-4 overflow-y-auto">
-					{[
-						"25/07/2024",
-						"24/07/2024",
-						"23/07/2024",
-						"22/07/2024",
-						,
-					].map((date, index) => (
-						<div
-							key={index}
-							className="flex justify-around items-center  text-center mb-2 w-full"
-						>
-							<span className="text-black dark:text-white bg-lightMode-normalDate dark:bg-darkMode-normalDate rounded-2xl w-64 h-11 ">
-								{date}
-							</span>
-							<div className="w-10  h-10 bg-white rounded-full flex items-center justify-center">
-								<span className="text-lightMode-percentageTop dark:text-darkMode-percentageTop font-bold text-sm p-2">
-									{100 - index * 5}%
-								</span>
-							</div>
-						</div>
-					))}
-				</div>
-
+				<TaskStatus />
 				{/* Header with Logout Button */}
 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
 					<div className="text-black dark:text-white text-xl">
