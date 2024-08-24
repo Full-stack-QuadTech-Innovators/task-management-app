@@ -3,11 +3,12 @@ const Tasks = require("../models/Tasks"); // Make sure this matches your model n
 const taskController = {
 	displayTasks: async (req, res) => {
 		console.log("displayTasks function called");
-
 		try {
-			const tasks = await Tasks.find();
-			console.log("Tasks fetched:", tasks);
+			const tasks = await Tasks.find({ user: req.user.id })
+				.sort({ pinned: -1, createdAt: -1 }) // Sort by pinned (descending) then by createdAt (descending)
+				.exec();
 
+			console.log("Tasks fetched:", tasks);
 			res.json(tasks);
 		} catch (error) {
 			console.error("Error fetching tasks:", error);
@@ -131,6 +132,59 @@ const taskController = {
 			}
 			res.status(500).json({
 				message: "Error editing task",
+				error: error.toString(),
+			});
+		}
+	},
+	handleTogglePin: async (req, res) => {
+		console.log("Toggling pin status for task");
+		console.log("Request params:", req.params);
+		console.log("User from request:", req.user);
+
+		try {
+			const taskId = req.params.id;
+			const userId = req.user.id;
+
+			if (!req.user || !req.user.id) {
+				return res
+					.status(401)
+					.json({ message: "User not authenticated" });
+			}
+
+			const task = await Tasks.findOne({ _id: taskId, user: userId });
+			if (!task) {
+				return res.status(404).json({
+					message:
+						"Task not found or you're not authorized to modify this task",
+				});
+			}
+
+			const updatedTask = await Tasks.findByIdAndUpdate(
+				taskId,
+				{ pinned: !task.pinned },
+				{ new: true, runValidators: true }
+			);
+
+			console.log("Task pin status updated:", updatedTask);
+
+			// Fetch all tasks again to get the updated order
+			const updatedTasks = await Tasks.find({ user: userId })
+				.sort({ pinned: -1, createdAt: -1 })
+				.exec();
+
+			res.json(updatedTasks);
+		} catch (error) {
+			console.error("Error toggling pin status:", error);
+			if (error.name === "ValidationError") {
+				return res.status(400).json({
+					message: "Validation error",
+					errors: Object.values(error.errors).map(
+						(err) => err.message
+					),
+				});
+			}
+			res.status(500).json({
+				message: "Error toggling pin status",
 				error: error.toString(),
 			});
 		}
