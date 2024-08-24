@@ -215,7 +215,7 @@ const Login = () => {
 							</div>
 						)}
 						<div className="mb-4">
-							<Label value={"Email"} className="mb-2" />
+							<Label value={"email"} className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 text-base border-b-2 border-black ${
 									isDarkMode
@@ -224,13 +224,14 @@ const Login = () => {
 								} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 								name="email"
 								type="email"
+								id="email"
 								value={formData.email}
 								onChange={handleChange}
 								required
 							/>
 						</div>
 						<div className="mb-6 relative">
-							<Label value={"Password"} className="mb-2" />
+							<Label value={"password"} className="mb-2" />
 							<div className="relative">
 								<input
 									className={`w-full px-4 py-2 text-base border-b-2 border-black ${
@@ -239,6 +240,7 @@ const Login = () => {
 											: "bg-lightMode-background text-lightMode-foreground"
 									} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 									name="password"
+									id="password"
 									type={showPassword ? "text" : "password"}
 									value={formData.password}
 									onChange={handleChange}

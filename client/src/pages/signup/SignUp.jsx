@@ -295,7 +295,7 @@ const SignUp = () => {
 					<h2 className="text-2xl text-center">Sign Up</h2>
 					<form className="space-y-6" onSubmit={handleSubmit}>
 						<div>
-							<Label value="Username" className="mb-2" />
+							<Label value="username" className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 text-base border-b-2 border-black ${
 									isDarkMode
@@ -303,6 +303,7 @@ const SignUp = () => {
 										: "bg-lightMode-background text-lightMode-foreground"
 								} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 								name="username"
+								id="username"
 								type="text"
 								value={formData.username}
 								onChange={handleChange}
@@ -315,7 +316,7 @@ const SignUp = () => {
 							)}
 						</div>
 						<div>
-							<Label value="Email" className="mb-2" />
+							<Label value="email" className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 text-base border-b-2 border-black ${
 									isDarkMode
@@ -324,6 +325,7 @@ const SignUp = () => {
 								} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 								name="email"
 								type="email"
+								id="email"
 								value={formData.email}
 								onChange={handleChange}
 								required
@@ -335,7 +337,7 @@ const SignUp = () => {
 							)}
 						</div>
 						<div className="relative">
-							<Label value="Password" className="mb-2" />
+							<Label value="password" className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 pr-10 text-base border-b-2 border-black ${
 									isDarkMode
@@ -343,6 +345,7 @@ const SignUp = () => {
 										: "bg-lightMode-background text-lightMode-foreground"
 								} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 								name="password"
+								id="password"
 								type={showPassword ? "text" : "password"}
 								value={formData.password}
 								onChange={handleChange}
@@ -369,7 +372,7 @@ const SignUp = () => {
 							)}
 						</div>
 						<div className="relative">
-							<Label value="Confirm Password" className="mb-2" />
+							<Label value="confirm password" className="mb-2" />
 							<input
 								className={`w-full px-4 py-2 pr-10 text-base border-b-2 border-black ${
 									isDarkMode
@@ -377,6 +380,7 @@ const SignUp = () => {
 										: "bg-lightMode-background text-lightMode-foreground"
 								} focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md`}
 								name="confirmPassword"
+								id="confirm password"
 								type={showConfirmPassword ? "text" : "password"}
 								value={formData.confirmPassword}
 								onChange={handleChange}
