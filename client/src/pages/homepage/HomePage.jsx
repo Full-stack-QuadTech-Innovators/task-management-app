@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useCallback, useEffect } from "react";
 import CurrentTasks from "../../components/task-list/CurrentTasks";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
@@ -7,6 +7,10 @@ import TaskStatus from "../../components/task-list/TaskStatus";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 import { useNavigate } from "react-router-dom";
 import TaskList from "../../components/task-list/TaskList";
+import axios from "axios";
+const api = axios.create({
+	baseURL: "http://localhost:3009",
+});
 
 export default function HomePage() {
 	const navigate = useNavigate();
@@ -16,13 +20,46 @@ export default function HomePage() {
 	const [currentDate, setCurrentDate] = useState("");
 	const [currentHour, setCurrentHour] = useState("");
 	const [nextTask, setNextTask] = useState(null);
+	const [tasks, setTasks] = useState([]);
+
+	const updateCurrentAndNextTasks = useCallback((taskList) => {
+		console.log("Updating current and next tasks with:", taskList);
+		if (Array.isArray(taskList) && taskList.length > 0) {
+			setCurrentTask(taskList[0]);
+			setNextTask(taskList.length > 1 ? taskList[1] : null);
+		} else {
+			setCurrentTask(null);
+			setNextTask(null);
+		}
+	}, []);
+	const fetchTasks = useCallback(async () => {
+		try {
+			const response = await api.get("/api/tasks", {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem(
+						"accessToken"
+					)}`,
+				},
+			});
+			console.log("Fetched tasks:", response.data);
+			setTasks(response.data);
+			updateCurrentAndNextTasks(response.data);
+		} catch (err) {
+			console.error("Error fetching tasks:", err);
+		}
+	}, []);
 
 	useEffect(() => {
 		document.title = "Patel Notes | Home";
+
 		updateDate();
 		const interval = setInterval(updateDate, 60000);
+
 		return () => clearInterval(interval);
 	}, []);
+	useEffect(() => {
+		fetchTasks();
+	}, [fetchTasks]);
 
 	const updateDate = () => {
 		const now = new Date();
@@ -36,11 +73,70 @@ export default function HomePage() {
 		navigate("/login");
 	};
 
-	const handleTasksUpdate = (current, next) => {
-		setCurrentTask(current);
-		setNextTask(next);
-	};
+	// const handleTasksUpdate = (current, next) => {
+	// 	setCurrentTask(current);
+	// 	setNextTask(next);
+	// };
 
+	const handleTasksUpdate = useCallback(
+		(updatedTaskOrTasks) => {
+			console.log("handleTasksUpdate received:", updatedTaskOrTasks);
+			if (updatedTaskOrTasks === null) {
+				console.warn(
+					"Received null in handleTasksUpdate, fetching tasks again"
+				);
+				fetchTasks();
+				return;
+			}
+
+			let updatedTasks;
+			if (Array.isArray(updatedTaskOrTasks)) {
+				updatedTasks = updatedTaskOrTasks;
+			} else if (
+				typeof updatedTaskOrTasks === "object" &&
+				updatedTaskOrTasks !== null
+			) {
+				updatedTasks = tasks.map((task) =>
+					task._id === updatedTaskOrTasks._id
+						? updatedTaskOrTasks
+						: task
+				);
+			} else {
+				console.error(
+					"handleTasksUpdate received invalid data:",
+					updatedTaskOrTasks
+				);
+				return;
+			}
+
+			setTasks(updatedTasks);
+			updateCurrentAndNextTasks(updatedTasks);
+		},
+		[tasks, fetchTasks, updateCurrentAndNextTasks]
+	);
+
+	const handleCompleteTask = useCallback(
+		async (taskId) => {
+			console.log("Completing task:", taskId);
+			try {
+				await api.delete(`/api/tasks/${taskId}`, {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem(
+							"accessToken"
+						)}`,
+					},
+				});
+				const updatedTasks = tasks.filter(
+					(task) => task._id !== taskId
+				);
+				setTasks(updatedTasks);
+				updateCurrentAndNextTasks(updatedTasks);
+			} catch (err) {
+				console.error("Error completing task:", err);
+			}
+		},
+		[tasks, updateCurrentAndNextTasks]
+	);
 	const checkTime = (hour) => {
 		if (hour >= 6 && hour < 12) {
 			return "Morning";
@@ -70,10 +166,9 @@ export default function HomePage() {
 					<ThemeToggleButton />
 				</div>
 
-				<TaskList onTasksUpdate={handleTasksUpdate} />
+				<TaskList onTasksUpdate={handleTasksUpdate} tasks={tasks} />
 
 				{/* Task Status */}
-				<TaskStatus />
 				{/* Header with Logout Button */}
 				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
 					<div className="text-black dark:text-white text-xl">
@@ -99,7 +194,11 @@ export default function HomePage() {
 				</div>
 
 				{/* Current Tasks */}
-				<CurrentTasks currentTask={currentTask} nextTask={nextTask} />
+				<CurrentTasks
+					currentTask={currentTask}
+					nextTask={nextTask}
+					onTasksUpdate={handleCompleteTask}
+				/>
 				{/* AI Suggestions */}
 				<div className="col-start-2 col-end-5 row-start-4 row-end-6 bg-lightMode-topTask dark:bg-darkMode-topTask rounded-2xl p-4 overflow-y-auto">
 					<div className="text-black dark:text-white text-center ">
