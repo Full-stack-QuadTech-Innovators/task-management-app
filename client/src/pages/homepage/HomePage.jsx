@@ -6,8 +6,11 @@ import UserContext from "../../contexts/UserContext/UserContext";
 import TaskStatus from "../../components/task-list/TaskStatus";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import TaskList from "../../components/task-list/TaskList";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
+import Header from "../../components/common/header/Header";
 const api = axios.create({
 	baseURL: "http://localhost:3009",
 });
@@ -72,6 +75,16 @@ export default function HomePage() {
 		await logout();
 		navigate("/login");
 	};
+
+	const location = useLocation();
+	// Determine if the current route is either the login or signup page
+	const isAuthPage =
+		location.pathname === "/login" || location.pathname === "/signup";
+
+	// Determine if the current route is the About page
+	const isAboutPage = location.pathname === "/about";
+	const isHomePage = location.pathname === "/";
+	const isContactPage = location.pathname === "/contact";
 
 	// const handleTasksUpdate = (current, next) => {
 	// 	setCurrentTask(current);
@@ -170,7 +183,7 @@ export default function HomePage() {
 
 				{/* Task Status */}
 				{/* Header with Logout Button */}
-				<div className="col-start-2 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
+				<div className="col-start-2 col-end-3 row-start-1 row-end-2 bg-lightMode-background dark:bg-black p-4 flex justify-between items-center rounded-2xl">
 					<div className="text-black dark:text-white text-xl">
 						{"  Good "}
 						{checkTime(currentHour)},{" "}
@@ -185,8 +198,36 @@ export default function HomePage() {
 						>
 							Logout
 						</button>
-						<div className="w-12 h-12 bg-white rounded-full"></div>
 					</div>
+				</div>
+
+				<div className="col-start-3 col-end-4 row-start-1 row-end-2 bg-lightMode-background dark:bg-darkMode-background rounded-2xl shadow-md">
+					<nav className="h-full flex items-center justify-center">
+						{!isAboutPage && (
+							<Link
+								to="/about"
+								className="mx-4 text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
+							>
+								About
+							</Link>
+						)}
+						{!isHomePage && (
+							<Link
+								to="/"
+								className="mx-4 text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
+							>
+								Home
+							</Link>
+						)}
+						{!isContactPage && (
+							<Link
+								to="/contact"
+								className="mx-4 text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
+							>
+								Contact
+							</Link>
+						)}
+					</nav>
 				</div>
 				{/* Date */}
 				<div className="col-start-4 col-end-5 row-start-1 row-end-2 bg-lightMode-buttonHover dark:bg-darkMode-buttonHover rounded-2xl flex items-center justify-center text-black dark:text-white text-xl">
