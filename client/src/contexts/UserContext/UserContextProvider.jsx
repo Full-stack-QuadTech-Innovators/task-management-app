@@ -234,13 +234,34 @@ function UserContextProvider({ children }) {
 		[checkCurrentUser, currentUser]
 	);
 
-	const logout = useCallback(() => {
-		localStorage.removeItem("accessToken");
-		setCurrentUser(null);
-		setUserList([]);
-		lastCheckedRef.current = 0;
-	}, []);
+	// const logout = useCallback(() => {
+	// 	localStorage.removeItem("accessToken");
+	// 	setCurrentUser(null);
+	// 	setUserList([]);
+	// 	lastCheckedRef.current = 0;
+	// }, []);
 
+	const logout = useCallback(async () => {
+		try {
+			// Call the server-side logout endpoint
+			await api.post("/api/users/logout");
+
+			// Proceed with client-side logout
+			localStorage.removeItem("accessToken");
+			setCurrentUser(null);
+			setUserList([]);
+			lastCheckedRef.current = 0;
+
+			console.log("Logout successful");
+		} catch (error) {
+			console.error("Logout failed:", error);
+			// Even if server-side logout fails, proceed with client-side logout
+			localStorage.removeItem("accessToken");
+			setCurrentUser(null);
+			setUserList([]);
+			lastCheckedRef.current = 0;
+		}
+	}, []);
 	useEffect(() => {
 		const token = localStorage.getItem("accessToken");
 		if (token) {
