@@ -53,7 +53,7 @@ export default function HomePage() {
 	}, []);
 
 	useEffect(() => {
-		document.title = "Patel Notes | Home";
+		document.title = "Petal Notes | Home";
 
 		updateDate();
 		const interval = setInterval(updateDate, 60000);

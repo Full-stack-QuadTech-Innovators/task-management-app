@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const NotFound = () => {
 	const { isDarkMode } = useContext(ThemeContext);
 	useEffect(() => {
-		document.title = "Patel Notes | 404";
+		document.title = "Petal Notes | 404";
 	}, []);
 	return (
 		<div

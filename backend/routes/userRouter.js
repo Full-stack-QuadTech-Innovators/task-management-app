@@ -3,7 +3,7 @@ const UserController = require("../controller/userController");
 const { authMiddleware } = require("../services/jwtHelpers");
 const router = express.Router();
 
-console.log("UserController methods:", Object.keys(UserController));
+// console.log("UserController methods:", Object.keys(UserController));
 
 // Public routes
 router.post("/login", UserController.loginUser);
