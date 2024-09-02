@@ -7,7 +7,7 @@ import ContinueButton from "../../components/common/submit-button/ContinueButton
 const Contact = () => {
 	const { isDarkMode } = useContext(ThemeContext);
 	useEffect(() => {
-		document.title = "Patel Notes | Contact";
+		document.title = "Petal Notes | Contact";
 	}, []);
 	return (
 		<div

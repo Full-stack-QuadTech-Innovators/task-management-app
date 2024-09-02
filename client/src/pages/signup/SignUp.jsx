@@ -28,7 +28,7 @@ const SignUp = () => {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	useEffect(() => {
-		document.title = "Patel Notes | Sign Up";
+		document.title = "Petal Notes | Sign Up";
 		console.log(userList);
 	}, [userList]);
 
