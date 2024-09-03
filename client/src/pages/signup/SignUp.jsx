@@ -5,13 +5,10 @@ import UserContext from "../../contexts/UserContext/UserContext";
 import Header from "../../components/common/header/Header";
 import Label from "../../components/common/label/Label";
 import ContinueButton from "../../components/common/submit-button/ContinueButton";
+import axiosInstance from "../../axiosInterceptor";
 import axios from "axios";
 import { validateSignUpForm } from "../../util/signup.auth";
 import { Eye, EyeOff } from "lucide-react";
-
-const api = axios.create({
-	baseURL: "http://localhost:3009", // Replace with your backend URL
-});
 
 const SignUp = () => {
 	const { userList, getUsers } = useContext(UserContext);
@@ -55,7 +52,7 @@ const SignUp = () => {
 			return;
 		}
 		try {
-			const response = await api.post("/api/users", {
+			const response = await axiosInstance.post("/api/users", {
 				username: formData.username,
 				email: formData.email,
 				password: formData.password,

@@ -18,5 +18,8 @@ console.log("Setting up DELETE /:id");
 router.delete("/:id", authMiddleware, UserController.deleteUser);
 console.log("Setting up GET /me");
 router.get("/me", authMiddleware, UserController.getCurrentUser);
-
+console.log("setting up /refresh-token");
+router.post("/refresh-token", UserController.getRefreshToken);
 module.exports = router;
+
+// router.post('/api/auth/refresh-token', UserController.refreshToken);

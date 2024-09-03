@@ -111,6 +111,7 @@ const path = require("path");
 const userRouter = require("./routes/userRouter");
 const taskRouter = require("./routes/taskRouter");
 const socketIo = require("socket.io");
+const cookieParser = require("cookie-parser");
 
 // Initialize the Express app
 const app = express();
@@ -135,6 +136,7 @@ const io = socketIo(server, {
 
 console.log("Loaded taskRouter:", taskRouter);
 require("./db/db");
+app.use(cookieParser());
 
 // Socket.IO connection handling
 io.on("connection", (socket) => {
