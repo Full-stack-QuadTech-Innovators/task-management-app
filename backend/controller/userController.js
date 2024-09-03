@@ -3,6 +3,8 @@ const { hashP, compareP } = require("../services/encrypt");
 const {
 	generateAccessToken,
 	generateRefreshToken,
+	verifyRefreshToken,
+	verifyAccessToken,
 } = require("../services/jwtHelpers");
 const UserController = {
 	getUsers: async (req, res) => {
@@ -31,7 +33,9 @@ const UserController = {
 			}
 			//JWT
 			let accessToken = generateAccessToken(user);
+			console.log("accessToken: ", accessToken);
 			let refreshToken = generateRefreshToken(user);
+			console.log("refreshToken: ", refreshToken);
 			await User.findByIdAndUpdate(
 				user._id,
 				{ refreshToken },
@@ -39,7 +43,8 @@ const UserController = {
 			);
 			res.cookie("refreshToken", refreshToken, {
 				httpOnly: true,
-				maxAge: 24 * 60 * 60 * 1000,
+				maxAge: 24 * 60 * 60 * 1000 * 7,
+				sameSite: "strict",
 			});
 
 			res.status(200).json({
@@ -113,6 +118,52 @@ const UserController = {
 		} catch (error) {
 			console.error("Error in getCurrentUser:", error);
 			res.status(500).json({ message: "Server error" });
+		}
+	},
+	getRefreshToken: async (req, res) => {
+		console.log("Cookies received:", req.cookies);
+		const refreshToken = req.cookies?.refreshToken;
+
+		if (!refreshToken) {
+			console.log("No refresh token found in cookies");
+			return res.status(401).json({ message: "Refresh Token Required" });
+		}
+
+		try {
+			const decoded = verifyRefreshToken(refreshToken);
+			console.log("Decoded refresh token:", decoded);
+
+			const user = await User.findById(decoded.id);
+			console.log("User found:", user ? user._id : "No user found");
+
+			if (!user || user.refreshToken !== refreshToken) {
+				console.log("Invalid refresh token");
+				return res
+					.status(403)
+					.json({ message: "Invalid refresh token" });
+			}
+
+			const newAccessToken = generateAccessToken(user);
+			const newRefreshToken = generateRefreshToken(user);
+
+			// Update user's refresh token in the database
+			await User.findByIdAndUpdate(user._id, {
+				refreshToken: newRefreshToken,
+			});
+
+			// Set the new refresh token as an HTTP-only cookie
+			res.cookie("refreshToken", newRefreshToken, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production", // true in production
+				sameSite: "strict",
+				maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+			});
+
+			console.log("Generated new access token and refresh token");
+			res.json({ accessToken: newAccessToken });
+		} catch (error) {
+			console.error("Error during refresh token verification:", error);
+			return res.status(403).json({ message: "Invalid refresh token" });
 		}
 	},
 };

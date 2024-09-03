@@ -1,12 +1,16 @@
-// import React, { useState, useMemo, useEffect, useCallback } from "react";
+// import React, {
+// 	useState,
+// 	useMemo,
+// 	useEffect,
+// 	useCallback,
+// 	useRef,
+// } from "react";
+// import axiosInstance from "../../axiosInterceptor";
+
 // import UserContext from "./UserContext";
 // import axios from "axios";
 
-// const api = axios.create({
-// 	baseURL: "http://localhost:3009",
-// });
-
-// api.interceptors.request.use(
+// axiosInstance.interceptors.request.use(
 // 	(config) => {
 // 		const token = localStorage.getItem("accessToken");
 // 		if (token) {
@@ -23,7 +27,8 @@
 // 	const [userList, setUserList] = useState([]);
 // 	const [isLoading, setIsLoading] = useState(false);
 // 	const [currentUser, setCurrentUser] = useState(null);
-// 	const [lastChecked, setLastChecked] = useState(0);
+// 	const lastCheckedRef = useRef(0);
+// 	const checkingUserRef = useRef(false);
 
 // 	const getUsers = useCallback(async () => {
 // 		const token = localStorage.getItem("accessToken");
@@ -34,7 +39,7 @@
 // 		console.log("starting to get users");
 // 		setIsLoading(true);
 // 		try {
-// 			const response = await api.get("/api/users");
+// 			const response = await axiosInstance.get("/api/users");
 // 			setUserList(response.data);
 // 		} catch (error) {
 // 			console.error("Failed to fetch users:", error);
@@ -47,36 +52,41 @@
 // 		}
 // 	}, []);
 
-// 	const checkCurrentUser = useCallback(
-// 		async (force = false) => {
-// 			const token = localStorage.getItem("accessToken");
-// 			const now = Date.now();
-// 			if (token && (force || now - lastChecked > 5 * 60 * 1000)) {
-// 				try {
-// 					const response = await api.get("/api/users/me");
-// 					setCurrentUser(response.data);
-// 					setLastChecked(now);
-// 				} catch (error) {
-// 					console.error("Failed to fetch current user:", error);
-// 					localStorage.removeItem("accessToken");
-// 					setCurrentUser(null);
-// 				}
+// 	const checkCurrentUser = useCallback(async (force = false) => {
+// 		const token = localStorage.getItem("accessToken");
+// 		const now = Date.now();
+// 		if (checkingUserRef.current) {
+// 			console.log("Already checking user, skipping");
+// 			return;
+// 		}
+// 		if (token && (force || now - lastCheckedRef.current > 5 * 60 * 1000)) {
+// 			checkingUserRef.current = true;
+// 			try {
+// 				const response = await axiosInstance.get("/api/users/me");
+// 				setCurrentUser(response.data);
+// 				lastCheckedRef.current = now;
+// 			} catch (error) {
+// 				console.error("Failed to fetch current user:", error);
+// 				localStorage.removeItem("accessToken");
+// 				localStorage.removeItem("refreshToken");
+// 				setCurrentUser(null);
+// 			} finally {
+// 				checkingUserRef.current = false;
 // 			}
-// 		},
-// 		[lastChecked]
-// 	);
+// 		}
+// 	}, []);
 
 // 	const login = useCallback(
 // 		async (email, password) => {
 // 			try {
-// 				const response = await api.post("/api/users/login", {
+// 				const response = await axiosInstance.post("/api/users/login", {
 // 					email,
 // 					password,
 // 				});
-// 				const { accessToken } = response.data;
+// 				const { accessToken, refreshToken } = response.data;
 // 				localStorage.setItem("accessToken", accessToken);
+// 				localStorage.setItem("refreshToken", refreshToken);
 // 				await checkCurrentUser(true);
-// 				console.log("Login successful, currentUser set:", currentUser);
 // 				return true;
 // 			} catch (error) {
 // 				console.error(
@@ -86,15 +96,37 @@
 // 				return false;
 // 			}
 // 		},
-// 		[checkCurrentUser, currentUser]
+// 		[checkCurrentUser]
 // 	);
 
-// 	const logout = useCallback(() => {
-// 		localStorage.removeItem("accessToken");
-// 		setCurrentUser(null);
-// 		setUserList([]);
-// 	}, []);
+// 	// const logout = useCallback(() => {
+// 	// 	localStorage.removeItem("accessToken");
+// 	// 	setCurrentUser(null);
+// 	// 	setUserList([]);
+// 	// 	lastCheckedRef.current = 0;
+// 	// }, []);
 
+// 	const logout = useCallback(async () => {
+// 		try {
+// 			// Call the server-side logout endpoint
+// 			await axiosInstance.post("/api/users/logout");
+
+// 			// Proceed with client-side logout
+// 			localStorage.removeItem("accessToken");
+// 			setCurrentUser(null);
+// 			setUserList([]);
+// 			lastCheckedRef.current = 0;
+
+// 			console.log("Logout successful");
+// 		} catch (error) {
+// 			console.error("Logout failed:", error);
+// 			// Even if server-side logout fails, proceed with client-side logout
+// 			localStorage.removeItem("accessToken");
+// 			setCurrentUser(null);
+// 			setUserList([]);
+// 			lastCheckedRef.current = 0;
+// 		}
+// 	}, []);
 // 	useEffect(() => {
 // 		const token = localStorage.getItem("accessToken");
 // 		if (token) {
@@ -139,25 +171,8 @@ import React, {
 	useCallback,
 	useRef,
 } from "react";
+import axiosInstance from "../../axiosInterceptor";
 import UserContext from "./UserContext";
-import axios from "axios";
-
-const api = axios.create({
-	baseURL: "http://localhost:3009",
-});
-
-api.interceptors.request.use(
-	(config) => {
-		const token = localStorage.getItem("accessToken");
-		if (token) {
-			config.headers["Authorization"] = `Bearer ${token}`;
-		}
-		return config;
-	},
-	(error) => {
-		return Promise.reject(error);
-	}
-);
 
 function UserContextProvider({ children }) {
 	const [userList, setUserList] = useState([]);
@@ -172,10 +187,10 @@ function UserContextProvider({ children }) {
 			console.log("No token found, skipping user fetch");
 			return;
 		}
-		console.log("starting to get users");
+		console.log("Starting to get users");
 		setIsLoading(true);
 		try {
-			const response = await api.get("/api/users");
+			const response = await axiosInstance.get("/api/users");
 			setUserList(response.data);
 		} catch (error) {
 			console.error("Failed to fetch users:", error);
@@ -198,11 +213,19 @@ function UserContextProvider({ children }) {
 		if (token && (force || now - lastCheckedRef.current > 5 * 60 * 1000)) {
 			checkingUserRef.current = true;
 			try {
-				const response = await api.get("/api/users/me");
+				const response = await axiosInstance.get("/api/users/me");
 				setCurrentUser(response.data);
 				lastCheckedRef.current = now;
 			} catch (error) {
 				console.error("Failed to fetch current user:", error);
+				if (error.response) {
+					console.error("Error response:", error.response.data);
+					console.error("Error status:", error.response.status);
+				} else if (error.request) {
+					console.error("No response received:", error.request);
+				} else {
+					console.error("Error setting up request:", error.message);
+				}
 				localStorage.removeItem("accessToken");
 				setCurrentUser(null);
 			} finally {
@@ -214,14 +237,13 @@ function UserContextProvider({ children }) {
 	const login = useCallback(
 		async (email, password) => {
 			try {
-				const response = await api.post("/api/users/login", {
+				const response = await axiosInstance.post("/api/users/login", {
 					email,
 					password,
 				});
 				const { accessToken } = response.data;
 				localStorage.setItem("accessToken", accessToken);
 				await checkCurrentUser(true);
-				console.log("Login successful, currentUser set:", currentUser);
 				return true;
 			} catch (error) {
 				console.error(
@@ -231,37 +253,22 @@ function UserContextProvider({ children }) {
 				return false;
 			}
 		},
-		[checkCurrentUser, currentUser]
+		[checkCurrentUser]
 	);
-
-	// const logout = useCallback(() => {
-	// 	localStorage.removeItem("accessToken");
-	// 	setCurrentUser(null);
-	// 	setUserList([]);
-	// 	lastCheckedRef.current = 0;
-	// }, []);
 
 	const logout = useCallback(async () => {
 		try {
-			// Call the server-side logout endpoint
-			await api.post("/api/users/logout");
-
-			// Proceed with client-side logout
-			localStorage.removeItem("accessToken");
-			setCurrentUser(null);
-			setUserList([]);
-			lastCheckedRef.current = 0;
-
-			console.log("Logout successful");
+			await axiosInstance.post("/api/users/logout");
 		} catch (error) {
 			console.error("Logout failed:", error);
-			// Even if server-side logout fails, proceed with client-side logout
+		} finally {
 			localStorage.removeItem("accessToken");
 			setCurrentUser(null);
 			setUserList([]);
 			lastCheckedRef.current = 0;
 		}
 	}, []);
+
 	useEffect(() => {
 		const token = localStorage.getItem("accessToken");
 		if (token) {

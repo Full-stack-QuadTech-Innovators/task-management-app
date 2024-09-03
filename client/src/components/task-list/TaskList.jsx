@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../axiosInterceptor";
 import { Trash2, Edit2, Pin } from "lucide-react";
 import {
 	AlertDialog,
@@ -13,10 +14,6 @@ import {
 	AlertDialogTrigger,
 } from "../../components/common/ui/alert-dialog";
 
-const api = axios.create({
-	baseURL: "http://localhost:3009",
-});
-
 const TaskList = ({ onTasksUpdate, tasks }) => {
 	const [newTask, setNewTask] = useState("");
 	const [error, setError] = useState(null);
@@ -26,7 +23,7 @@ const TaskList = ({ onTasksUpdate, tasks }) => {
 		e.preventDefault();
 		if (!newTask.trim()) return;
 		try {
-			const response = await api.post(
+			const response = await axiosInstance.post(
 				"/api/tasks",
 				{ content: newTask },
 				{
@@ -47,7 +44,7 @@ const TaskList = ({ onTasksUpdate, tasks }) => {
 
 	const handleDeleteTask = async (taskId) => {
 		try {
-			await api.delete(`/api/tasks/${taskId}`, {
+			await axiosInstancedelete(`/api/tasks/${taskId}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem(
 						"accessToken"
@@ -63,7 +60,7 @@ const TaskList = ({ onTasksUpdate, tasks }) => {
 
 	const handleEditTask = async (taskId, newContent) => {
 		try {
-			const response = await api.put(
+			const response = await axiosInstanceput(
 				`/api/tasks/${taskId}`,
 				{ content: newContent },
 				{
@@ -88,7 +85,7 @@ const TaskList = ({ onTasksUpdate, tasks }) => {
 
 	const handleTogglePin = async (taskId) => {
 		try {
-			const response = await api.patch(
+			const response = await axiosInstance.patch(
 				`/api/tasks/${taskId}/pinned`,
 				{},
 				{

@@ -1,4 +1,5 @@
 import { useContext, useState, useCallback, useEffect } from "react";
+import axiosInstance from "../../axiosInterceptor";
 import CurrentTasks from "../../components/task-list/CurrentTasks";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
@@ -37,7 +38,7 @@ export default function HomePage() {
 	}, []);
 	const fetchTasks = useCallback(async () => {
 		try {
-			const response = await api.get("/api/tasks", {
+			const response = await axiosInstance.get("/api/tasks", {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem(
 						"accessToken"
@@ -132,7 +133,7 @@ export default function HomePage() {
 		async (taskId) => {
 			console.log("Completing task:", taskId);
 			try {
-				await api.delete(`/api/tasks/${taskId}`, {
+				await axiosInstance.delete(`/api/tasks/${taskId}`, {
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem(
 							"accessToken"
