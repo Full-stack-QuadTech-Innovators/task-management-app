@@ -118,7 +118,7 @@ const Chat: React.FC<ChatProps> = ({ roomId = "room-1" }) => {
 					</span>
 					<button
 						onClick={toggleDarkMode}
-						className={`px-4 py-2 rounded-md transition-colors duration-200 ${
+						className={`px-3 py-2 rounded-md transition-colors duration-200 ${
 							isDarkMode
 								? "bg-darkMode-button hover:bg-darkMode-buttonHover"
 								: "bg-lightMode-button hover:bg-lightMode-buttonHover"
