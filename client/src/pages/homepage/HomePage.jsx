@@ -4,17 +4,11 @@ import CurrentTasks from "../../components/task-list/CurrentTasks";
 import ThemeContext from "../../contexts/ThemeContext/ThemeContext";
 import Logo from "../../assets/logo.svg";
 import UserContext from "../../contexts/UserContext/UserContext";
-import TaskStatus from "../../components/task-list/TaskStatus";
 import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeButton";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import TaskList from "../../components/task-list/TaskList";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import Header from "../../components/common/header/Header";
-const api = axios.create({
-	baseURL: "http://localhost:3009",
-});
 
 export default function HomePage() {
 	const navigate = useNavigate();
@@ -228,6 +222,12 @@ export default function HomePage() {
 								Contact
 							</Link>
 						)}
+						<Link
+							to="/chat"
+							className="mx-4 text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200"
+						>
+							Chat
+						</Link>
 					</nav>
 				</div>
 				{/* Date */}

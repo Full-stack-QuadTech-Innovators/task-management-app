@@ -137,9 +137,9 @@ const Login = () => {
 							/>
 						</div>
 					</form>
-					<div className="text-center mt-4">
+					<div className="text-center mt-4 flex justify-between align-middle">
 						<p>
-							Don't have an account?{" "}
+							Don't have an account?
 							<Link
 								to="/signup"
 								className={`font-medium ${
@@ -149,6 +149,18 @@ const Login = () => {
 								} hover:underline`}
 							>
 								Sign up
+							</Link>
+						</p>
+						<p>
+							<Link
+								to="/reset-password"
+								className={`font-medium ${
+									isDarkMode
+										? "text-blue-400"
+										: "text-blue-600"
+								} hover:underline`}
+							>
+								Forgot Password?{" "}
 							</Link>
 						</p>
 					</div>
