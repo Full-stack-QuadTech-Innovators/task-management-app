@@ -44,7 +44,7 @@ const TaskList = ({ onTasksUpdate, tasks }) => {
 
 	const handleDeleteTask = async (taskId) => {
 		try {
-			await axiosInstancedelete(`/api/tasks/${taskId}`, {
+			await axiosInstance.delete(`/api/tasks/${taskId}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem(
 						"accessToken"
