@@ -14,10 +14,8 @@ import ThemeToggleButton from "../../components/common/theme-button/ToggleThemeB
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import TaskList from "../../components/task-list/TaskList";
 import { Mistral } from "@mistralai/mistralai";
-
 let mistral;
 const api = import.meta.env.VITE_MISTRAL_API;
-console.log(api);
 try {
 	mistral = new Mistral({
 		apiKey: api ?? "",
@@ -205,7 +203,7 @@ export default function HomePage() {
 	};
 
 	const sendCurrentTaskToMistral = async (taskTitle) => {
-		const prompt = `My current task is: ${taskTitle}. Can you provide a short, motivational message about this task?`;
+		const prompt = `My current task is: ${taskTitle}. Can you provide a short, set of instructions as to how to complete it?`;
 		try {
 			const response = await sendToMistral(prompt);
 			setMistralOutput((prevOutput) => prevOutput + "\n\n");
@@ -237,6 +235,11 @@ export default function HomePage() {
 				);
 			}
 			setUserInput("");
+		}
+	};
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleUserInput();
 		}
 	};
 
@@ -348,15 +351,16 @@ export default function HomePage() {
 						type="text"
 						value={userInput}
 						onChange={(e) => setUserInput(e.target.value)}
+						onKeyDown={handleKeyDown}
 						className="flex-grow p-3 rounded-xl bg-lightMode-button dark:bg-darkMode-topTask text-white w-2/4 placeholder-gray-500"
 						placeholder="Ask me anything..."
 					/>
-					<button
+					{/* <button
 						onClick={handleUserInput}
 						className="ml-4 bg-lightMode-buttonHover dark:bg-darkMode-topTask text-white px-4 py-2 rounded-xl"
 					>
 						Send
-					</button>
+					</button> */}
 				</div>
 			</div>
 		</div>
